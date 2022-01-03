@@ -1,0 +1,78 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css"
+    />
+    
+    <title>{%block title%} {%endblock%} Marketplace</title>
+    <script src="{%static 'scripts/main.js'%}'"></script>
+    <link rel="stylesheet" href="{% static 'styles/main.css'%}">
+  </head>
+  <body>
+    <nav class="navbar is-dark">
+      <div class="navbar-brand">
+        <a href="/" class="navbar-item"><strong>Marketplace</strong></a>
+
+        <a
+          role="button"
+          class="navbar-burger"
+          aria-label="menu"
+          aria-expanded="false"
+          data-target="main-navbar"
+        >
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+      </div>
+
+      <div class="navbar-menu" id="main-navbar">
+        <div class="navbar-start">
+          <div class="navbar-item">
+          <form action="{%url 'search'%}" method="get">
+            <div class="field has-addons">
+              <div class="control">
+                <input type="text" class="input" placeholder="Search..." name="query">
+              </div>
+              <div class="control">
+                <button class="button is-dark is-uppercase">search</button>
+              </div>
+            </div>
+          </form>
+          </div>
+        </div>
+        <div class="navbar-end">
+            {%for category in menu_categories%}
+              <a href="{%url 'category' category.slug%}" class="navbar-item">{{category.title}}</a>
+            {%endfor%}
+            <a href="{%url 'contact'%}" class="navbar-item">Contant</a>
+            <div class="navbar-item">
+              <a href="{%url 'cart'%}" class="button is-dark">Cart{%if cart%} ({{cart|length}}) {%endif%}</a>
+            </div>
+        </div>
+      </div>
+    </nav>
+    <section class="section">
+      <div class="container">{%block content%} {%endblock%}</div>
+    </section>
+      <footer class="footer">
+    <h3 class="is-size-4 mb-4">Marketplace</h3>
+    {% if request.user.is_authenticated%}
+      <a href="{%url 'vendor_admin'%}" style="margin-bottom: 0;">Vendor Admin</a>
+    {%else%}
+      <a href="{%url 'become_vendor'%}" style="margin-bottom: 0;">Become vendor</a>
+    {%endif%}
+        <hr style="margin-top: 0;">
+    <a href="{%url 'vendors'%}">Our Vendors List</a>
+  </footer>
+  {%block scripts%}
+  {%endblock%}
+  </body>
+
+</html>

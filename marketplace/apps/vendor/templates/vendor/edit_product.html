@@ -1,0 +1,28 @@
+{%extends 'core/base.html'%}
+
+{%block title%}Edit Product | {%endblock%}
+
+{%block content%}
+
+<h1 class="title">Edit Product</h1>
+<form action="." method="post" enctype="multipart/form-data">
+    {%csrf_token%}
+    {{form.as_p}}
+    <div class="field">
+        <div class="control">
+            <button class="button is-dark is-uppercase">Save Changes</button>
+        </div>
+    </div>
+</form>
+<hr>
+<h2 class="subtitle">Images</h2>
+<form action="." method="post" enctype="multipart/form-data">
+    {%csrf_token%}
+    {{image_form.as_p}}
+    <div class="field">
+        <div class="control">
+            <button class="button is-dark is-uppercase">Add Image</button>
+        </div>
+    </div>
+</form>
+{%endblock%}

@@ -1,0 +1,89 @@
+{%extends 'core/base.html'%} {%block title%} Welcome |{%endblock%} 
+{%block content%}
+    <div id="productapp">
+    {%if product.image%}
+        <figure class="image is-4by3 mb-6">
+            <img :src="mainImage.image" alt="">
+        </figure>
+    {%endif%}
+    {%if product.images.all%}
+        
+    <hr>
+    <div class="columns">
+        <div class="column is-2" v-for="image in images" v-bind:key="image.id">
+            <img :src="image.thumbnail" @click="changeMainImage(image)">
+        </div>
+    </div>
+    {%endif%}
+    <h1 class="title">{{product.title}}, {{product.price}}EGP</h1>
+    <p class="mb-6"> 
+        <span class="tag is-dark">
+            {{product.vendor.name}}
+        </span>
+    </p>
+    <p>{{product.description}}</p>
+    <hr>
+    {% if messages%}
+    {%for message in messages%}
+        <div class="notification is-success is-toast">{{message}}</div>
+    {%endfor%}
+    {%endif%}
+    <form action="." method="post">
+        {%csrf_token%}
+        <div class="field has-addons">
+            <div class="control">
+                <input type="number" name="quantity" value="1" class="input" min="1">
+            </div>
+            <div class="control">
+                <button class="button is-dark is-uppercase">Add To Cart</button>
+            </div>
+        </div>
+    </form>
+    {%if similar_products%}
+        <hr>
+        <div class="columns is-multiline">
+            <div class="column is-12">
+                <h2 class="subtitle">Similar Products</h2>
+            </div>
+            {%for product in similar_products%}
+                <div class=" column is-3 product-list-item">
+                    <div class="box">
+                        <figure class="image is-4by3 mb-4">
+                            <img src="{{product.get_thumbnail}}" alt="">
+                        </figure>
+                        <h2 class="subtitle">{{product.title}}</h2>
+                        <h3 class="price is-size-6 mb-5">{{product.price}} EGP</h3>
+                        <hr>
+                        <a href="{%url 'product' product.category.slug product.slug%}" class="button is-dark is-uppercase">View</a>
+                    </div>
+                </div>
+            {%endfor%}
+        </div>
+    {%endif%}
+    </div>
+{%endblock%}
+
+{%block scripts%}
+        {{images_string|json_script:"json-image_string"}}
+        <script src="https://unpkg.com/vue@next"></script>
+        <script>
+            const productApp={
+                data(){
+                    return {
+                        mainImage:'',
+                        images:[]
+                    }
+                },
+                mounted() {
+                    this.images=JSON.parse(JSON.parse(document.getElementById('json-image_string').textContent))
+                    this.mainImage=this.images[0]
+                },
+                methods:{
+                    changeMainImage(image){
+                        this.mainImage=image
+                    }
+                }
+            }
+            Vue.createApp(productApp).mount('#productapp')
+        </script>
+{%endblock%}
